@@ -1,5 +1,5 @@
 dataset_params:
-  root_dir: ../moving-gif
+  root_dir: moving-gif
   frame_shape: null
   id_sampling: False
   augmentation_params:
@@ -34,7 +34,7 @@ model_params:
 
 
 train_params:
-  num_epochs: 100
+  num_epochs: 20
   num_repeats: 50
   epoch_milestones: [70, 90]
   lr_generator: 2.0e-4

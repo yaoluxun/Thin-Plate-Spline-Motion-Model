@@ -8,6 +8,8 @@ from torch.nn.utils import clip_grad_norm_
 from frames_dataset import DatasetRepeater
 import math
 
+from datetime import datetime
+
 def train(config, inpainting_network, kp_detector, bg_predictor, dense_motion_network, checkpoint, log_dir, dataset):
     train_params = config['train_params']
     optimizer = torch.optim.Adam(
@@ -52,6 +54,7 @@ def train(config, inpainting_network, kp_detector, bg_predictor, dense_motion_ne
     with Logger(log_dir=log_dir, visualizer_params=config['visualizer_params'], 
                 checkpoint_freq=train_params['checkpoint_freq']) as logger:
         for epoch in trange(start_epoch, train_params['num_epochs']):
+            print(f"Training epoch {epoch}...current time: {datetime.now()}")
             for x in dataloader:
                 if(torch.cuda.is_available()):
                     x['driving'] = x['driving'].cuda()
