@@ -6,4 +6,3 @@ log/*
 *.pth
 *.pyc
 *.jpeg
-checkpoints/*
