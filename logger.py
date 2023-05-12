@@ -224,7 +224,7 @@ def modify_state_dict(state_dict, checkpoint):
 # Remove keys that are not needed
     
     for k, v in checkpoint.items():
-        state_dict[k[len('inpainting_network.'):]] = v
+        state_dict['inpainting_network.' + k] = v
 
     # Add new keys
     state_dict['conv1.weight'] = torch.randn(256, 512, 3, 3)
