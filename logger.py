@@ -53,7 +53,8 @@ class Logger:
                 optimizer_avd=None):
         checkpoint = torch.load(checkpoint_path)
         if inpainting_network is not None:
-            inpainting_network.load_state_dict(checkpoint['inpainting_network'])
+            # inpainting_network.load_state_dict(checkpoint['inpainting_network'])
+            inpainting_network.load_state_dict({k.replace('module.',''):v for k,v in checkpoint['inpainting_network'].items()})
         if kp_detector is not None:
             kp_detector.load_state_dict(checkpoint['kp_detector'])
         if bg_predictor is not None and 'bg_predictor' in checkpoint:
