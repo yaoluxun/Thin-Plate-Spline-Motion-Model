@@ -49,12 +49,8 @@ if __name__ == "__main__":
     
 
 
-
-   
-
     # Define the fine-tuned model
-    fine_tuned_inpainting = FineTunedInpaintingNetwork(**config['model_params']['generator_params'],
-                                        **config['model_params']['common_params'])
+    fine_tuned_inpainting = FineTunedInpaintingNetwork(inpainting)
 
     if torch.cuda.is_available():
         cuda_device = torch.device('cuda:'+str(opt.device_ids[0]))
