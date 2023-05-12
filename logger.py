@@ -47,6 +47,7 @@ class Logger:
         if not (os.path.exists(cpk_path) and emergent):
             torch.save(cpk, cpk_path)
 
+
     @staticmethod
     def load_cpk(checkpoint_path, inpainting_network=None, dense_motion_network =None, kp_detector=None, 
                 bg_predictor=None, avd_network=None, optimizer=None, optimizer_bg_predictor=None,
@@ -55,9 +56,12 @@ class Logger:
         if inpainting_network is not None:
             # inpainting_network.load_state_dict(checkpoint['inpainting_network'])
             # inpainting_network.load_state_dict({k.replace('module.',''):v for k,v in checkpoint['inpainting_network'].items()})
-            state_dict = inpainting_network.state_dict()
-            for k1, k2 in zip(state_dict.keys(), checkpoint['inpainting_network'].keys()):
-                state_dict[k1] = checkpoint[k2]
+            model_state_dict = modify_state_dict(inpainting_network.state_dict(), checkpoint['inpainting_network'])
+
+
+            inpainting_network.load_state_dict(model_state_dict)
+
+        
 
         if kp_detector is not None:
             kp_detector.load_state_dict(checkpoint['kp_detector'])
@@ -215,3 +219,34 @@ class Visualizer:
         image = self.create_image_grid(*images)
         image = (255 * image).astype(np.uint8)
         return image
+
+def modify_state_dict(state_dict, checkpoint):
+# Remove keys that are not needed
+    
+    for k, v in checkpoint.items():
+        state_dict[k[len('inpainting_network.'):]] = v
+
+    # Add new keys
+    state_dict['conv1.weight'] = torch.randn(256, 512, 3, 3)
+    state_dict['conv1.bias'] = torch.randn(256)
+    state_dict['bn1.weight'] = torch.randn(256)
+    state_dict['bn1.bias'] = torch.randn(256)
+    state_dict['bn1.running_mean'] = torch.randn(256)
+    state_dict['bn1.running_var'] = torch.randn(256)
+    state_dict['conv2.weight'] = torch.randn(128, 256, 3, 3)
+    state_dict['conv2.bias'] = torch.randn(128)
+    state_dict['bn2.weight'] = torch.randn(128)
+    state_dict['bn2.bias'] = torch.randn(128)
+    state_dict['bn2.running_mean'] = torch.randn(128)
+    state_dict['bn2.running_var'] = torch.randn(128)
+    state_dict['conv3.weight'] = torch.randn(64, 128, 3, 3)
+    state_dict['conv3.bias'] = torch.randn(64)
+    state_dict['bn3.weight'] = torch.randn(64)
+    state_dict['bn3.bias'] = torch.randn(64)
+    state_dict['bn3.running_mean'] = torch.randn(64)
+    state_dict['bn3.running_var'] = torch.randn(64)
+    state_dict['conv4.weight'] = torch.randn(3, 64, 3, 3)
+    state_dict['conv4.bias'] = torch.randn(3)
+
+    return state_dict
+    
