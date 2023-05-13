@@ -79,10 +79,11 @@ class Logger:
             optimizer_state_dict = checkpoint['optimizer']
             new_optimizer_state_dict = {}
             for key in optimizer_state_dict.keys():
+                print(key)
                 new_key = key.replace('inpainting_network', ' ')
                 new_optimizer_state_dict[new_key] = optimizer_state_dict[key]
-            print("new", new_optimizer_state_dict['param_groups'])
-            print("old", optimizer_state_dict['param_groups'])
+            # print("new", new_optimizer_state_dict['param_groups'])
+            # print("old", optimizer_state_dict['param_groups'])
             optimizer.load_state_dict(new_optimizer_state_dict)
         if optimizer_avd is not None:
             if 'optimizer_avd' in checkpoint:
