@@ -13,7 +13,6 @@ from modules.keypoint_detector import KPDetector
 from modules.bg_motion_predictor import BGMotionPredictor
 from modules.dense_motion import DenseMotionNetwork
 from modules.avd_network import AVDNetwork
-from modules.fine_tuned_inpainting import FineTunedInpaintingNetwork
 import torch
 from train import train
 from train_avd import train_avd
@@ -46,11 +45,6 @@ if __name__ == "__main__":
 
     inpainting = InpaintingNetwork(**config['model_params']['generator_params'],
                                         **config['model_params']['common_params'])
-    
-
-
-    # Define the fine-tuned model
-    fine_tuned_inpainting = FineTunedInpaintingNetwork(inpainting)
 
     if torch.cuda.is_available():
         cuda_device = torch.device('cuda:'+str(opt.device_ids[0]))
@@ -86,10 +80,10 @@ if __name__ == "__main__":
 
     if opt.mode == 'train':
         print("Training...")
-        train(config, fine_tuned_inpainting, kp_detector, bg_predictor, dense_motion_network, opt.checkpoint, log_dir, dataset)
+        train(config, inpainting, kp_detector, bg_predictor, dense_motion_network, opt.checkpoint, log_dir, dataset)
     elif opt.mode == 'train_avd':
         print("Training Animation via Disentaglement...")
-        train_avd(config, fine_tuned_inpainting, kp_detector, bg_predictor, dense_motion_network, avd_network, opt.checkpoint, log_dir, dataset)
+        train_avd(config, inpainting, kp_detector, bg_predictor, dense_motion_network, avd_network, opt.checkpoint, log_dir, dataset)
     elif opt.mode == 'reconstruction':
         print("Reconstruction...")
-        reconstruction(config, fine_tuned_inpainting, kp_detector, bg_predictor, dense_motion_network, opt.checkpoint, log_dir, dataset)
+        reconstruction(config, inpainting, kp_detector, bg_predictor, dense_motion_network, opt.checkpoint, log_dir, dataset)
