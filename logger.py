@@ -75,7 +75,13 @@ class Logger:
         if optimizer_bg_predictor is not None and 'optimizer_bg_predictor' in checkpoint:
             optimizer_bg_predictor.load_state_dict(checkpoint['optimizer_bg_predictor'])
         if optimizer is not None and 'optimizer' in checkpoint:
-            optimizer.load_state_dict(checkpoint['optimizer'], strict=False)
+            # optimizer.load_state_dict(checkpoint['optimizer'])
+            optimizer_state_dict = checkpoint['optimizer']
+            new_optimizer_state_dict = {}
+            for key in optimizer_state_dict.keys():
+                new_key = key.replace('inpainting_network', ' ')
+                new_optimizer_state_dict[new_key] = optimizer_state_dict[key]
+            optimizer.load_state_dict(new_optimizer_state_dict)
         if optimizer_avd is not None:
             if 'optimizer_avd' in checkpoint:
                 optimizer_avd.load_state_dict(checkpoint['optimizer_avd'])
