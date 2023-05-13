@@ -75,7 +75,7 @@ class Logger:
         if optimizer_bg_predictor is not None and 'optimizer_bg_predictor' in checkpoint:
             optimizer_bg_predictor.load_state_dict(checkpoint['optimizer_bg_predictor'])
         if optimizer is not None and 'optimizer' in checkpoint:
-            optimizer.load_state_dict(checkpoint['optimizer'])
+            optimizer.load_state_dict(checkpoint['optimizer'], strict=False)
         if optimizer_avd is not None:
             if 'optimizer_avd' in checkpoint:
                 optimizer_avd.load_state_dict(checkpoint['optimizer_avd'])
